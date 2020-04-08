@@ -914,6 +914,8 @@ async function run() {
   const jobName = core.getInput('job-name', { required: true });
   const jobStatus = core.getInput('job-status', { required: true });
   const deploymentId = core.getInput('deployment-id', { required: false });
+  
+  core.info('jobStatus:' + jobStatus);
 
   var icon_emoji = '',
       header = '';
@@ -991,7 +993,7 @@ async function run() {
     ]
   };
 
-  core.info(message);
+  core.info(JSON.stringify(message));
 
   // Create webhook instance
   var arguments = {
