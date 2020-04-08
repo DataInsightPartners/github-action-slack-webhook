@@ -73,7 +73,7 @@ async function run() {
   if(context.eventName === 'pull_request') {
     fields.push({
       "title": "Commit",
-      "value": "<https://github.com/" + repo_path + "/pull/" + context.payload.pull_request.number + "/commit/" + context.sha + "|" + context.sha.substring(0,7) + ">"
+      "value": "<https://github.com/" + repo_path + "/pull/" + context.payload.pull_request.number + "/commits/" + context.sha + "|" + context.sha.substring(0,7) + ">"
     });
   } else {
     fields.push({
