@@ -84,10 +84,7 @@ async function run() {
         "title": title,
         "title_link": titleLink,
         "fallback": context.repo.repo + ': ' + context.workflow + ' - ' + jobName + ' ' + jobStatus,
-        "fields": [{
-            "title": "Actor",
-            "value": "justin"
-            }],
+        "fields": fields,
         "color": "#27ae60"
         }
     ]
