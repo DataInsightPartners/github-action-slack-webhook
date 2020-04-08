@@ -1,9 +1,6 @@
 const core = require('@actions/core');
 const { IncomingWebhook } = require('@slack/webhook');
 
-// const url = process.env.SLACK_WEBHOOK_URL;
-
-
 async function run() {
   const url = core.getInput('slack-webhook-url', { required: true });
   const webhook = new IncomingWebhook(url);
