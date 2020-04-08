@@ -7,13 +7,22 @@ const repo_path = context.repo.owner + "/" + context.repo.repo;
 const runId = process.env.GITHUB_RUN_ID; // actions/runs/
 
 
-
-
 async function run() {
+  const octokit = new github.GitHub(core.getInput('github-token'));
   const url = core.getInput('slack-webhook-url', { required: true });
   const jobName = core.getInput('job-name', { required: true });
   const jobStatus = core.getInput('job-status', { required: true });
   const deploymentId = core.getInput('deployment-id', { required: false });
+
+  var pullRequest = octokit.pulls.get({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    pull_number: 44
+  });
+
+  core.info('pullRequest');
+  core.info(JSON.stringify(pullRequest));
+
 
   var icon_emoji = '',
       header = '';

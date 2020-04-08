@@ -3,6 +3,9 @@ name: 'Send Slack Webhook'
 description: 'Wait a designated number of milliseconds'
 
 inputs:
+  github-token:
+    description: 'Github API Token'
+    required: true
   slack-webhook-url:
     description: 'Slack webhook URL'
     required: true
