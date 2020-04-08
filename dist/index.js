@@ -931,7 +931,7 @@ async function run() {
   if(jobName === 'deploy') {
     icon_emoji = ':rocket:';
     title = context.repo.repo + " Deploy " + jobStatus + ": " + context.workflow;
-    title = "https://us-west-2.console.aws.amazon.com/codesuite/codedeploy/deployments/" + deploymentId;
+    titleLink = "https://us-west-2.console.aws.amazon.com/codesuite/codedeploy/deployments/" + deploymentId;
   }
 
   if(jobStatus.toLowerCase() === 'success') {
