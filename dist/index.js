@@ -922,12 +922,12 @@ async function run() {
   
   // Set message and fields depending on job type
   if(jobName === 'test') {
-    icon_emoji = jobStatus === 'success' ? ':heavy_check_mark:' : ':x:';
+    icon_emoji = jobStatus.toLowerCase() === 'success' ? ':heavy_check_mark:' : ':x:';
     header = "Test " + jobStatus + ": *<https://github.com/" + repo_path + "/actions/runs/" + runId + "|" + context.workflow + ">*"
   }
 
   if(jobName === 'deploy') {
-    icon_emoji = jobStatus === 'success' ? ':rocket:' : ':red_circle:';
+    icon_emoji = jobStatus.toLowerCase() === 'success' ? ':rocket:' : ':red_circle:';
     header = "Deploy " + jobStatus + ": *<https://us-west-2.console.aws.amazon.com/codesuite/codedeploy/deployments/" + deploymentId + "|" + deploymentId + ">*"
 
   }
