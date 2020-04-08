@@ -58,7 +58,7 @@ async function run() {
 
     fields.push({
       "type": "mrkdwn",
-      "text": "*PR:*\n<" + context.payload.pull_request.html_url + "|#" + context.payload.pull_request.number + " - " + pullRequest.data.title + "> - "
+      "text": "*PR:*\n<" + context.payload.pull_request.html_url + "|#" + context.payload.pull_request.number + " - " + pullRequest.data.title + ">"
     });
   }
 
