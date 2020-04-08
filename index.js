@@ -24,13 +24,13 @@ async function run() {
   // Set message and fields depending on job type
   if(jobName === 'test') {
     icon_emoji = ':pencil:';
-    title = "Test " + jobStatus + ": " + context.workflow;
+    title = context.repo.repo + " Test " + jobStatus + ": " + context.workflow;
     titleLink = "https://github.com/" + repo_path + "/actions/runs/" + runId;
   }
 
   if(jobName === 'deploy') {
     icon_emoji = ':rocket:';
-    title = "Deploy " + jobStatus + ": " + context.workflow;
+    title = context.repo.repo + " Deploy " + jobStatus + ": " + context.workflow;
     title = "https://us-west-2.console.aws.amazon.com/codesuite/codedeploy/deployments/" + deploymentId;
   }
 
@@ -89,9 +89,7 @@ async function run() {
         }
     ]
   };
-
-  core.info(JSON.stringify(message));
-
+  
   // Create webhook instance
   var arguments = {
     username: context.repo.repo + ': ' + context.workflow + ' - ' + jobName,
