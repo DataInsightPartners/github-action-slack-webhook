@@ -1,13 +1,10 @@
 const core = require('@actions/core');
+const github = require('@actions/github');
 const { IncomingWebhook } = require('@slack/webhook');
 
-const repository = process.env.GITHUB_REPOSITORY;
-const workflow = process.env.GITHUB_WORKFLOW;
-const event = process.env.GITHUB_EVENT_NAME;
+const context = github.context;
+
 const runId = process.env.GITHUB_RUN_ID; // actions/runs/
-const commit = process.env.GITHUB_SHA;
-const ref = process.env.GITHUB_REF;
-const actor = process.env.GITHUB_ACTOR;
 
 
 
@@ -16,12 +13,41 @@ async function run() {
   const url = core.getInput('slack-webhook-url', { required: true });
   const webhook = new IncomingWebhook(url);
   
-  
   var arguments = {
     username: 'FAFSA Tracker: CI/CD',
     icon_emoji: ':+1',
     channel: '#devops'
   };
+
+  var fields = [];
+
+  fields.push({
+    "type": "mrkdwn",
+    "text": "*Event:*\n" + context.eventName + "\n"
+  });
+
+  fields.push({
+    "type": "mrkdwn",
+    "text": "*Ref:*\n" + context.ref + "\n"
+  });
+
+  if(context.eventName === 'pull_request') {
+    fields.push({
+      "type": "mrkdwn",
+      "text": "*PR:*\n<" + context.payload.pull_request.html_url + "|#" + context.payload.pull_request.number + "> - " + context.payload.pull_request.body.substring(0,30) + "\n"
+    });
+  }
+
+  fields.push({
+    "type": "mrkdwn",
+    "text": "*Actor:*\n" + context.actor + "\n"
+  });
+
+  fields.push({
+    "type": "mrkdwn",
+    "text": "*Commit:*\n<https://github.com/" + context.repo.repo + "/commit/" + context.sha + "|" + context.sha.substring(0,7) + ">\n"
+  });
+
   
   var message = {
     "blocks": [
@@ -29,7 +55,7 @@ async function run() {
         "type": "section",
         "text": {
           "type": "mrkdwn",
-          "text": "Job Run Succeeded: *<https://github.com/" + repository + "/actions/runs/" + runId + "|" + workflow + ">*"
+          "text": "Job Run Succeeded: *<https://github.com/" + context.repo + "/actions/runs/" + runId + "|" + context.workflow + ">*"
         }
       },
       {
@@ -37,32 +63,7 @@ async function run() {
       },
       {
         "type": "section",
-        "fields": [
-          {
-            "type": "mrkdwn",
-            "text": "*Event:*\n" + event
-          },
-          {
-            "type": "mrkdwn",
-            "text": "*Ref:*\n" + ref
-          },
-          {
-            "type": "mrkdwn",
-            "text": "*PR:*\n<https://github.com/" + repository + "/pull/3028|#3130> - Fflv Aggregation Final"
-          },
-          {
-            "type": "mrkdwn",
-            "text": "*Branch:*\nfflv-aggregation"
-          },
-          {
-            "type": "mrkdwn",
-            "text": "*Actor:*\n" + actor
-          },
-          {
-            "type": "mrkdwn",
-            "text": "*Commit:*\n<https://github.com/" + repository + "/commit/" + commit + "|" + commit.slice(7) + ">"
-          }
-        ]
+        "fields": fields
       }
     ]
   };
