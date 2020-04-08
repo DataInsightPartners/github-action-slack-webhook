@@ -914,22 +914,27 @@ async function run() {
   const jobName = core.getInput('job-name', { required: true });
   const jobStatus = core.getInput('job-status', { required: true });
   const deploymentId = core.getInput('deployment-id', { required: false });
-  core.info(jobName + ' | ' + jobStatus);
 
   var icon_emoji = '',
       header = '';
-      fields = [];
+      fields = [],
+      color = '#95a5a6';
   
   // Set message and fields depending on job type
   if(jobName === 'test') {
-    icon_emoji = jobStatus.toLowerCase() === 'success' ? ':heavy_check_mark:' : ':x:';
+    icon_emoji = ':pencil:';
     header = "Test " + jobStatus + ": *<https://github.com/" + repo_path + "/actions/runs/" + runId + "|" + context.workflow + ">*"
   }
 
   if(jobName === 'deploy') {
-    icon_emoji = jobStatus.toLowerCase() === 'success' ? ':rocket:' : ':red_circle:';
+    icon_emoji = ':rocket:';
     header = "Deploy " + jobStatus + ": *<https://us-west-2.console.aws.amazon.com/codesuite/codedeploy/deployments/" + deploymentId + "|" + deploymentId + ">*"
+  }
 
+  if(jobStatus.toLowerCase() === 'success') {
+    color = '#27ae60';
+  } else if(jobStatus.toLowerCase === 'failure') {
+    color = '#c0392b';
   }
 
   // Set universal fields
@@ -972,12 +977,16 @@ async function run() {
           "text": header
         }
       },
+    ],
+    "attachments": [
       {
-        "type": "divider"
-      },
-      {
-        "type": "section",
-        "fields": fields
+        "blocks": [
+          {
+            "type": "section",
+            "fields": fields
+          }
+        ],
+        "color": color
       }
     ]
   };
