@@ -916,19 +916,21 @@ async function run() {
 
 
   var icon_emoji = '',
-      header = '';
+      title = '',
+      titleLink = '',
       fields = [],
       color = '#95a5a6';
   
   // Set message and fields depending on job type
   if(jobName === 'test') {
     icon_emoji = ':pencil:';
-    header = "Test " + jobStatus + ": *<https://github.com/" + repo_path + "/actions/runs/" + runId + "|" + context.workflow + ">*"
+    title = "Test " + jobStatus + ": " + context.workflow;
+    titleLink = "https://github.com/" + repo_path + "/actions/runs/" + runId;
   }
 
   if(jobName === 'deploy') {
     icon_emoji = ':rocket:';
-    header = "Deploy " + jobStatus + ": *<https://us-west-2.console.aws.amazon.com/codesuite/codedeploy/deployments/" + deploymentId + "|" + deploymentId + ">*"
+    title = "Deploy " + jobStatus + ": *<https://us-west-2.console.aws.amazon.com/codesuite/codedeploy/deployments/" + deploymentId + "|" + deploymentId + ">*"
   }
 
   if(jobStatus.toLowerCase() === 'success') {
@@ -976,23 +978,12 @@ async function run() {
 
   // Compose Message
   var message = {
-    "blocks": [
-      {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": header
-        }
-      },
-    ],
+    "title": title,
+    "title_link": titleLink,
     "attachments": [
       {
-        "blocks": [
-          {
-            "type": "section",
-            "fields": fields
-          }
-        ],
+        "fallback": context.repo.repo + ': ' + context.workflow + ' - ' + jobName + ' ' + jobStatus,
+        "fields": fields,
         "color": color
       }
     ]
