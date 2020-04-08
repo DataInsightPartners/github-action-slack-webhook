@@ -1,28 +1,15 @@
 {
-  "name": "javascript-action",
-  "version": "1.0.0",
-  "description": "JavaScript Action Template",
+  "private": true,
+  "name": "github-action-slack-webhook",
+  "version": "0.0.1",
+  "description": "Github Action to Send Slack Webhook Requests",
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js",
     "package": "ncc build index.js -o dist",
     "test": "eslint index.js && jest"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/actions/javascript-action.git"
-  },
-  "keywords": [
-    "GitHub",
-    "Actions",
-    "JavaScript"
-  ],
-  "author": "GitHub",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/actions/javascript-action/issues"
-  },
-  "homepage": "https://github.com/actions/javascript-action#readme",
+  "author": "Data Insight Partners",
   "dependencies": {
     "@actions/core": "^1.1.1"
   },
