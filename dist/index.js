@@ -914,15 +914,6 @@ async function run() {
   const jobStatus = core.getInput('job-status', { required: true });
   const deploymentId = core.getInput('deployment-id', { required: false });
 
-  var pullRequest = octokit.pulls.get({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    pull_number: 44
-  });
-
-  core.info('pullRequest');
-  core.info(JSON.stringify(pullRequest));
-
 
   var icon_emoji = '',
       header = '';
@@ -959,9 +950,18 @@ async function run() {
   });
 
   if(context.eventName === 'pull_request') {
+    var pullRequest = await octokit.pulls.get({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      pull_number: context.payload.pull_request.number
+    });
+  
+    core.info('pullRequest');
+    core.info(JSON.stringify(pullRequest));    
+
     fields.push({
       "type": "mrkdwn",
-      "text": "*PR:*\n<" + context.payload.pull_request.html_url + "|#" + context.payload.pull_request.number + "> - " + context.payload.pull_request.body.substring(0,30)
+      "text": "*PR:*\n<" + context.payload.pull_request.html_url + "|#" + context.payload.pull_request.number + "> - " + pullRequest.data.title
     });
   }
 
