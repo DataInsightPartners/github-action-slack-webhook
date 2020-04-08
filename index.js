@@ -30,7 +30,8 @@ async function run() {
 
   if(jobName === 'deploy') {
     icon_emoji = ':rocket:';
-    title = "Deploy " + jobStatus + ": *<https://us-west-2.console.aws.amazon.com/codesuite/codedeploy/deployments/" + deploymentId + "|" + deploymentId + ">*"
+    title = "Deploy " + jobStatus + ": " + context.workflow;
+    title = "https://us-west-2.console.aws.amazon.com/codesuite/codedeploy/deployments/" + deploymentId;
   }
 
   if(jobStatus.toLowerCase() === 'success') {
@@ -42,13 +43,13 @@ async function run() {
 
   // Set universal fields
   fields.push({
-    "type": "mrkdwn",
-    "text": "*Event:*\n" + context.eventName
+    "title": "Event",
+    "value": context.eventName
   });
 
   fields.push({
-    "type": "mrkdwn",
-    "text": "*Ref:*\n" + context.ref
+    "title": "Ref",
+    "value": context.ref
   });
 
   if(context.eventName === 'pull_request') {
@@ -59,35 +60,40 @@ async function run() {
     });
 
     fields.push({
-      "type": "mrkdwn",
-      "text": "*PR:*\n<" + context.payload.pull_request.html_url + "|#" + context.payload.pull_request.number + " - " + pullRequest.data.title + ">"
+      "title": "PR",
+      "value": "<" + context.payload.pull_request.html_url + "|#" + context.payload.pull_request.number + " - " + pullRequest.data.title + ">"
     });
   }
 
   fields.push({
-    "type": "mrkdwn",
-    "text": "*Actor:*\n" + context.actor
+    "title": "Actor",
+    "value": context.actor
   });
 
   fields.push({
-    "type": "mrkdwn",
-    "text": "*Commit:*\n<https://github.com/" + repo_path + "/commit/" + context.sha + "|" + context.sha.substring(0,7) + ">"
+    "title": "Commit",
+    "value": "<https://github.com/" + repo_path + "/commit/" + context.sha + "|" + context.sha.substring(0,7) + ">"
   });
 
   
 
   // Compose Message
   var message = {
-    "title": title,
-    "title_link": titleLink,
     "attachments": [
-      {
+        {
+        "title": title,
+        "title_link": titleLink,
         "fallback": context.repo.repo + ': ' + context.workflow + ' - ' + jobName + ' ' + jobStatus,
-        "fields": fields,
-        "color": color
-      }
+        "fields": [{
+            "title": "Actor",
+            "value": "justin"
+            }],
+        "color": "#27ae60"
+        }
     ]
   };
+
+  core.info(JSON.stringify(message));
 
   // Create webhook instance
   var arguments = {
