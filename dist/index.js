@@ -970,11 +970,17 @@ async function run() {
     "value": context.actor
   });
 
-  fields.push({
-    "title": "Commit",
-    "value": "<https://github.com/" + repo_path + "/commit/" + context.sha + "|" + context.sha.substring(0,7) + ">"
-  });
-
+  if(context.eventName === 'pull_request') {
+    fields.push({
+      "title": "Commit",
+      "value": "<https://github.com/" + repo_path + "/pull/" + context.payload.pull_request.number + "/commit/" + context.sha + "|" + context.sha.substring(0,7) + ">"
+    });
+  } else {
+    fields.push({
+      "title": "Commit",
+      "value": "<https://github.com/" + repo_path + "/commit/" + context.sha + "|" + context.sha.substring(0,7) + ">"
+    });    
+  }
   
 
   // Compose Message
@@ -989,7 +995,7 @@ async function run() {
         }
     ]
   };
-  
+
   // Create webhook instance
   var arguments = {
     username: context.repo.repo + ': ' + context.workflow + ' - ' + jobName,
