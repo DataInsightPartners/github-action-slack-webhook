@@ -11,17 +11,29 @@ const runId = process.env.GITHUB_RUN_ID; // actions/runs/
 
 async function run() {
   const url = core.getInput('slack-webhook-url', { required: true });
-  
-  var arguments = {
-    username: context.repo.repo + ':' + context.workflow,
-    icon_emoji: ':+1',
-    channel: '#devops'
-  };
-  
-  const webhook = new IncomingWebhook(url, arguments);
-  
+  const job = core.getInput('job', { required: true });
+  const deploymentId = core.getInput('deployment-id', { required: false });
+  core.info(url);
+  core.info(job);
+  core.info(deploymentId);
 
-  var fields = [];
+  var icon_emoji = '',
+      header = '';
+      fields = [];
+  
+  // Set message and fields depending on job type
+  if(job === 'test') {
+    icon_emoji = ':heavy_check_mark:';
+    header = "Job Run Succeeded: *<https://github.com/" + repo_path + "/actions/runs/" + runId + "|" + context.workflow + ">*"
+  }
+
+  if(job === 'deploy') {
+    icon_emoji = ':rocket:';
+    header = "Deploy: *<https://us-west-2.console.aws.amazon.com/codesuite/codedeploy/deployments/" + deploymentId + "|" + deploymentId + ">*"
+
+  }
+
+  // Set universal fields
   fields.push({
     "type": "mrkdwn",
     "text": "*Event:*\n" + context.eventName
@@ -50,13 +62,15 @@ async function run() {
   });
 
   
+
+  // Compose Message
   var message = {
     "blocks": [
       {
         "type": "section",
         "text": {
           "type": "mrkdwn",
-          "text": "Job Run Succeeded: *<https://github.com/" + repo_path + "/actions/runs/" + runId + "|" + context.workflow + ">*"
+          "text": header
         }
       },
       {
@@ -68,7 +82,15 @@ async function run() {
       }
     ]
   };
+
+  // Create webhook instance
+  var arguments = {
+    username: context.repo.repo + ': ' + context.workflow,
+    icon_emoji: icon_emoji,
+    channel: '#devops'
+  };
   
+  const webhook = new IncomingWebhook(url, arguments);  
   
   // Send Webhook Post Request
   try{

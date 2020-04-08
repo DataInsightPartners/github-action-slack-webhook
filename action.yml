@@ -6,6 +6,12 @@ inputs:
   slack-webhook-url:
     description: 'Slack webhook URL'
     required: true
+  job:
+    description: 'Github Action Job Name'
+    required: true
+  deployment-id:
+    description: 'AWS Code Deploy Deployment Id'
+    required: false
   
 outputs:
 runs:
