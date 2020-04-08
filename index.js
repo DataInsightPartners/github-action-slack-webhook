@@ -14,6 +14,7 @@ async function run() {
   const jobName = core.getInput('job-name', { required: true });
   const jobStatus = core.getInput('job-status', { required: true });
   const deploymentId = core.getInput('deployment-id', { required: false });
+  core.info(jobName + ' | ' + jobStatus);
 
   var icon_emoji = '',
       header = '';
