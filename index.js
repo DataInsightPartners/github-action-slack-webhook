@@ -11,25 +11,23 @@ const runId = process.env.GITHUB_RUN_ID; // actions/runs/
 
 async function run() {
   const url = core.getInput('slack-webhook-url', { required: true });
-  const job = core.getInput('job', { required: true });
+  const jobName = core.getInput('job-name', { required: true });
+  const jobStatus = core.getInput('job-status', { required: true });
   const deploymentId = core.getInput('deployment-id', { required: false });
-  core.info(url);
-  core.info(job);
-  core.info(deploymentId);
 
   var icon_emoji = '',
       header = '';
       fields = [];
   
   // Set message and fields depending on job type
-  if(job === 'test') {
-    icon_emoji = ':heavy_check_mark:';
-    header = "Job Run Succeeded: *<https://github.com/" + repo_path + "/actions/runs/" + runId + "|" + context.workflow + ">*"
+  if(jobName === 'test') {
+    icon_emoji = jobStatus === 'success' ? ':heavy_check_mark:' : ':x:';
+    header = "Test " + jobStatus + ": *<https://github.com/" + repo_path + "/actions/runs/" + runId + "|" + context.workflow + ">*"
   }
 
-  if(job === 'deploy') {
-    icon_emoji = ':rocket:';
-    header = "Deploy: *<https://us-west-2.console.aws.amazon.com/codesuite/codedeploy/deployments/" + deploymentId + "|" + deploymentId + ">*"
+  if(jobName === 'deploy') {
+    icon_emoji = jobStatus === 'success' ? ':rocket:' : ':red_circle:';
+    header = "Deploy " + jobStatus + ": *<https://us-west-2.console.aws.amazon.com/codesuite/codedeploy/deployments/" + deploymentId + "|" + deploymentId + ">*"
 
   }
 
@@ -85,7 +83,7 @@ async function run() {
 
   // Create webhook instance
   var arguments = {
-    username: context.repo.repo + ': ' + context.workflow,
+    username: context.repo.repo + ': ' + context.workflow + ' - ' + jobName,
     icon_emoji: icon_emoji,
     channel: '#devops'
   };

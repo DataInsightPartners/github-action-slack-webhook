@@ -6,8 +6,11 @@ inputs:
   slack-webhook-url:
     description: 'Slack webhook URL'
     required: true
-  job:
+  job-name:
     description: 'Github Action Job Name'
+    required: true
+  job-status:
+    description: 'Github Action Job Status'
     required: true
   deployment-id:
     description: 'AWS Code Deploy Deployment Id'
