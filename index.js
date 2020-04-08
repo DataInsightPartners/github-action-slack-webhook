@@ -3,7 +3,7 @@ const github = require('@actions/github');
 const { IncomingWebhook } = require('@slack/webhook');
 
 const context = github.context;
-
+const repo_path = context.repo.owner + "/" + context.repo.repo;
 const runId = process.env.GITHUB_RUN_ID; // actions/runs/
 
 
@@ -11,16 +11,16 @@ const runId = process.env.GITHUB_RUN_ID; // actions/runs/
 
 async function run() {
   const url = core.getInput('slack-webhook-url', { required: true });
-  const webhook = new IncomingWebhook(url);
-  
   var arguments = {
     username: 'FAFSA Tracker: CI/CD',
     icon_emoji: ':+1',
     channel: '#devops'
   };
+  
+  const webhook = new IncomingWebhook(url, arguments);
+  
 
   var fields = [];
-
   fields.push({
     "type": "mrkdwn",
     "text": "*Event:*\n" + context.eventName + "\n"
@@ -45,7 +45,7 @@ async function run() {
 
   fields.push({
     "type": "mrkdwn",
-    "text": "*Commit:*\n<https://github.com/" + context.repo.repo + "/commit/" + context.sha + "|" + context.sha.substring(0,7) + ">\n"
+    "text": "*Commit:*\n<https://github.com/" + repo_path + "/commit/" + context.sha + "|" + context.sha.substring(0,7) + ">\n"
   });
 
   
@@ -55,7 +55,7 @@ async function run() {
         "type": "section",
         "text": {
           "type": "mrkdwn",
-          "text": "Job Run Succeeded: *<https://github.com/" + context.repo + "/actions/runs/" + runId + "|" + context.workflow + ">*"
+          "text": "*" + repo_path + "*\nJob Run Succeeded: *<https://github.com/" + repo_path + "/actions/runs/" + runId + "|" + context.workflow + ">*"
         }
       },
       {
@@ -71,7 +71,7 @@ async function run() {
   
   // Send Webhook Post Request
   try{
-    await webhook.send(message, arguments);
+    await webhook.send(message);
   } catch (error) {
     core.setFailed(`Action failed with error ${error}`);
   }
