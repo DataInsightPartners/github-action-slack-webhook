@@ -914,8 +914,6 @@ async function run() {
   const jobName = core.getInput('job-name', { required: true });
   const jobStatus = core.getInput('job-status', { required: true });
   const deploymentId = core.getInput('deployment-id', { required: false });
-  
-  core.info('jobStatus:' + jobStatus);
 
   var icon_emoji = '',
       header = '';
@@ -935,7 +933,8 @@ async function run() {
 
   if(jobStatus.toLowerCase() === 'success') {
     color = '#27ae60';
-  } else if(jobStatus.toLowerCase === 'failure') {
+  } 
+  if(jobStatus.toLowerCase() === 'failure') {
     color = '#c0392b';
   }
 
@@ -992,8 +991,6 @@ async function run() {
       }
     ]
   };
-
-  core.info(JSON.stringify(message));
 
   // Create webhook instance
   var arguments = {
