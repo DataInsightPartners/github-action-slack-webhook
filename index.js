@@ -91,6 +91,8 @@ async function run() {
     ]
   };
 
+  core.info(JSON.stringify(message));
+
   // Create webhook instance
   var arguments = {
     username: context.repo.repo + ': ' + context.workflow + ' - ' + jobName,
