@@ -45,15 +45,15 @@ async function run() {
   }          
 
   // Set Title
-  if(jobName === 'test') {
+  if(jobName.startsWith('test')) {
     icon_emoji = ':pencil:';
-    title = context.repo.repo + " Test: " + jobStatus.toUpperCase();
+    title = context.repo.repo + " " + jobName.charAt(0).toUpperCase + jobName.slice(1) + ": " + jobStatus.toUpperCase();
     titleLink = "https://github.com/" + repo_path + "/actions/runs/" + runId;
   }
 
-  if(jobName === 'deploy') {
+  if(jobName.startsWith('deploy')) {
     icon_emoji = ':rocket:';
-    title = context.repo.repo + " Deploy: " + jobStatus.toUpperCase();
+    title = context.repo.repo + " " + jobName.charAt(0).toUpperCase + jobName.slice(1) + ": " + jobStatus.toUpperCase();
     titleLink = "https://us-west-2.console.aws.amazon.com/codesuite/codedeploy/deployments/" + deploymentId;
   }
 
@@ -109,9 +109,6 @@ async function run() {
       "value": "<https://github.com/" + repo_path + "/commit/" + commitSha + "|" + commitSha.substring(0,7) + "> - " + commit.data.message
     });    
   }
-  
-
-  fallback = context.repo.repo + " Test: " + jobStatus.toUpperCase();
 
 
   // Compose Message
