@@ -1001,12 +1001,12 @@ async function run() {
   if(context.eventName === 'pull_request') {
     fields.push({
       "title": "Commit",
-      "value": "<https://github.com/" + repo_path + "/pull/" + context.payload.pull_request.number + "/commits/" + commitSha + "|" + commitSha.substring(0,7) + "> - " + commit.data.message
+      "value": "<https://github.com/" + repo_path + "/pull/" + context.payload.pull_request.number + "/commits/" + commitSha + "|" + commitSha.substring(0,7) + "> - " + commit.data.message.substring(0,150)
     });
   } else {
     fields.push({
       "title": "Commit",
-      "value": "<https://github.com/" + repo_path + "/commit/" + commitSha + "|" + commitSha.substring(0,7) + "> - " + commit.data.message
+      "value": "<https://github.com/" + repo_path + "/commit/" + commitSha + "|" + commitSha.substring(0,7) + "> - " + commit.data.message.substring(0,150)
     });    
   }
 
