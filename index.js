@@ -14,14 +14,23 @@ async function run() {
   const jobStatus = core.getInput('job-status', { required: true });
   const deploymentId = core.getInput('deployment-id', { required: false });
 
-
   var icon_emoji = '',
       title = '',
       titleLink = '',
-      fields = [],
+      fields = []
+      fallback = '',
       color = '#95a5a6';
-  
-  // Set message and fields depending on job type
+ 
+  // Get Pull Request Info (if event is Pull Request)
+  if(context.eventName === 'pull_request') {
+    var pullRequest = await octokit.pulls.get({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      pull_number: context.payload.pull_request.number
+    });
+  }          
+
+  // Set Title
   if(jobName === 'test') {
     icon_emoji = ':pencil:';
     title = context.repo.repo + " Test: " + jobStatus.toUpperCase();
@@ -34,6 +43,15 @@ async function run() {
     titleLink = "https://us-west-2.console.aws.amazon.com/codesuite/codedeploy/deployments/" + deploymentId;
   }
 
+  // Determine Fallback
+  fallback = title;
+  if(context.eventName === 'pull_request') {
+    fallback += ' (#' + context.payload.pull_request.number + ' - ' + pullRequest.data.title + ')';
+  } else {
+    fallback += ' (' + context.ref.split('/')[2] + ')';
+  }
+
+  // Determine Color
   if(jobStatus.toLowerCase() === 'success') {
     color = '#27ae60';
   } 
@@ -41,27 +59,23 @@ async function run() {
     color = '#c0392b';
   }
 
-  // Set universal fields
+  // Set Fields
   fields.push({
     "title": "Event",
     "value": context.eventName
   });
 
-  fields.push({
-    "title": "Ref",
-    "value": context.ref
-  });
+
 
   if(context.eventName === 'pull_request') {
-    var pullRequest = await octokit.pulls.get({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
-      pull_number: context.payload.pull_request.number
-    });
-
     fields.push({
       "title": "PR",
       "value": "<" + context.payload.pull_request.html_url + "|#" + context.payload.pull_request.number + " - " + pullRequest.data.title + ">"
+    });
+  } else {
+    fields.push({
+      "title": "Branch",
+      "value": context.ref.split('/')[2]
     });
   }
 
@@ -83,13 +97,16 @@ async function run() {
   }
   
 
+  fallback = context.repo.repo + " Test: " + jobStatus.toUpperCase();
+
+
   // Compose Message
   var message = {
     "attachments": [
         {
         "title": title,
         "title_link": titleLink,
-        "fallback": context.repo.repo + ': ' + context.workflow + ' - ' + jobName + ' ' + jobStatus,
+        "fallback": fallback,
         "fields": fields,
         "color": color
         }
