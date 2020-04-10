@@ -14,19 +14,25 @@ async function run() {
   const jobStatus = core.getInput('job-status', { required: true });
   const deploymentId = core.getInput('deployment-id', { required: false });
 
-  var icon_emoji = '',
+  var commitSha = null,
+      icon_emoji = '',
       title = '',
       titleLink = '',
       fields = []
       fallback = '',
       color = '#95a5a6';
  
-
   // Get Commit Info
+  if(context.eventName === 'pull_request') {
+    commitSha = core.getInput('pull-request-sha');
+  } else {
+    commitSha = context.sha;
+  }
+
   var commit = await octokit.git.getCommit({
     owner: context.repo.owner,
     repo: context.repo.repo,
-    commit_sha: context.sha
+    commit_sha: commitSha
   });
 
   // Get Pull Request Info (if event is Pull Request)
@@ -95,12 +101,12 @@ async function run() {
   if(context.eventName === 'pull_request') {
     fields.push({
       "title": "Commit",
-      "value": "<https://github.com/" + repo_path + "/pull/" + context.payload.pull_request.number + "/commits/" + context.sha + "|" + context.sha.substring(0,7) + "> - " + commit.data.message
+      "value": "<https://github.com/" + repo_path + "/pull/" + context.payload.pull_request.number + "/commits/" + commitSha + "|" + commitSha.substring(0,7) + "> - " + commit.data.message
     });
   } else {
     fields.push({
       "title": "Commit",
-      "value": "<https://github.com/" + repo_path + "/commit/" + context.sha + "|" + context.sha.substring(0,7) + "> - " + commit.data.message
+      "value": "<https://github.com/" + repo_path + "/commit/" + commitSha + "|" + commitSha.substring(0,7) + "> - " + commit.data.message
     });    
   }
   
