@@ -921,6 +921,14 @@ async function run() {
       fallback = '',
       color = '#95a5a6';
  
+
+  // Get Commit Info
+  var commit = await octokit.git.getCommit({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    commit_sha: context.sha
+  });
+
   // Get Pull Request Info (if event is Pull Request)
   if(context.eventName === 'pull_request') {
     var pullRequest = await octokit.pulls.get({
@@ -987,12 +995,12 @@ async function run() {
   if(context.eventName === 'pull_request') {
     fields.push({
       "title": "Commit",
-      "value": "<https://github.com/" + repo_path + "/pull/" + context.payload.pull_request.number + "/commits/" + context.sha + "|" + context.sha.substring(0,7) + ">"
+      "value": "<https://github.com/" + repo_path + "/pull/" + context.payload.pull_request.number + "/commits/" + context.sha + "|" + context.sha.substring(0,7) + "> - " + commit.message
     });
   } else {
     fields.push({
       "title": "Commit",
-      "value": "<https://github.com/" + repo_path + "/commit/" + context.sha + "|" + context.sha.substring(0,7) + ">"
+      "value": "<https://github.com/" + repo_path + "/commit/" + context.sha + "|" + context.sha.substring(0,7) + "> - " + commit.message
     });    
   }
   
