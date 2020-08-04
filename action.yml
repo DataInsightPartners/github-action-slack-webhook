@@ -22,7 +22,6 @@ inputs:
     description: 'AWS Code Deploy Deployment Id'
     required: false
   
-outputs:
 runs:
   using: 'node12'
   main: 'dist/index.js'
