@@ -3,9 +3,24 @@ name: 'Send Slack Webhook'
 description: 'Wait a designated number of milliseconds'
 
 inputs:
+  pull-request-sha:
+    description: 'Git Commit SHA That Triggered Pull Request'
+    required: false
+  github-token:
+    description: 'Github API Token'
+    required: true
   slack-webhook-url:
     description: 'Slack webhook URL'
     required: true
+  job-name:
+    description: 'Github Action Job Name'
+    required: true
+  job-status:
+    description: 'Github Action Job Status'
+    required: true
+  deployment-id:
+    description: 'AWS Code Deploy Deployment Id'
+    required: false
   
 runs:
   using: 'node12'
