@@ -12,12 +12,12 @@
   "author": "Data Insight Partners",
   "dependencies": {
     "@actions/core": "^1.2.6",
-    "@actions/github": "^2.1.1",
-    "@slack/webhook": "^5.0.3"
+    "@actions/github": "^2.2.0",
+    "@slack/webhook": "^5.0.4"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.24.1",
-    "eslint": "^6.3.0",
-    "jest": "^24.9.0"
+    "eslint": "^6.8.0",
+    "jest": "^26.6.3"
   }
 }
