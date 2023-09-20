@@ -14191,7 +14191,7 @@ async function run() {
     commitSha = context.sha;
   }
 
-  var commit = await octokit.git.getCommit({
+  var commit = await octokit.rest.git.getCommit({
     owner: context.repo.owner,
     repo: context.repo.repo,
     commit_sha: commitSha
@@ -14199,7 +14199,7 @@ async function run() {
 
   // Get Pull Request Info (if event is Pull Request)
   if(context.eventName === 'pull_request') {
-    var pullRequest = await octokit.pulls.get({
+    var pullRequest = await octokit.rest.pulls.get({
       owner: context.repo.owner,
       repo: context.repo.repo,
       pull_number: context.payload.pull_request.number
