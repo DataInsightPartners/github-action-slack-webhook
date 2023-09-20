@@ -17,6 +17,6 @@ jobs:
       with:
         pull-request-sha: ${{github.event.pull_request.head.sha }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        slack-webhook-url: ''
+        slack-webhook-url: http://www.example.com
         job-name: test
         job-status: ${{job.status}}
