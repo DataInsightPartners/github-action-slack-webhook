@@ -8,7 +8,7 @@ const runId = process.env.GITHUB_RUN_ID; // actions/runs/
 
 
 async function run() {
-  const octokit = new github.GitHub(core.getInput('github-token'));
+  const octokit = github.getOctokit(core.getInput('github-token'));
   const url = core.getInput('slack-webhook-url', { required: true });
   const jobName = core.getInput('job-name', { required: true });
   const jobStatus = core.getInput('job-status', { required: true });
