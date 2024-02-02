@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "github-action-slack-webhook",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Github Action to Send Slack Webhook Requests",
   "main": "index.js",
   "scripts": {
